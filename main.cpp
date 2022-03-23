@@ -22,7 +22,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"   FragColor = vec4(0.96f, 0.96f, 0.35f, 1.0f);\n"
 "}\n\0";
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -133,14 +133,24 @@ int main()
     };
     */
 
-    /*
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-    };
-    */
+          0.0f,  -0.8f,  0.0f,
+          0.4f,   0.0f,  0.0f,
+          0.8f,  -0.8f,  0.0f,
 
+          0.0f,  -0.8f,  0.0f,
+         -0.4f,   0.0f,  0.0f,
+         -0.8f,  -0.8f,  0.0f,
+
+         -0.4f,   0.0f,  0.0f,
+          0.0f,   0.8f,  0.0f,
+          0.4f,   0.0f,  0.0f,
+    };
+
+    int verticesNumber = { std::size(vertices)};
+
+
+    /*
     float vertices[] = {
      0.5f,  0.5f, 0.0f,  // top right
      0.5f, -0.5f, 0.0f,  // bottom right
@@ -152,6 +162,7 @@ int main()
         0, 1, 3,   // first triangle
         1, 2, 3    // second triangle
     };
+    */
     
     // Dessine seulement les lignes
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -160,10 +171,12 @@ int main()
     // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Création de l'EBO qui permet de lier indices et vertices
+    /*
     unsigned int EBO;
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    */
 
 
     // Link Vertex au VBO qui va rendre les vertices avec le shader setup au dessus
@@ -191,7 +204,7 @@ int main()
         // rendering commands here
 
         // gestion de la couleur du buffer
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Utilisation du programme de shaders
@@ -201,11 +214,11 @@ int main()
         glBindVertexArray(VAO);
 
         // Dessin du triangle
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, verticesNumber);
 
         // Dessin du rectangle
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         //
 
