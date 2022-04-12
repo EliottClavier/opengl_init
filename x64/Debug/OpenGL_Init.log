@@ -1,0 +1,4 @@
+﻿  main.cpp
+E:\Users\Eliott Clavier\Desktop\Le bureau du bureau\Ecole\Projets\projetC++\OpenGL_Init\main.cpp(213,47): warning C4267: 'initialisation' : conversion de 'size_t' en 'int', perte possible de données
+E:\Users\Eliott Clavier\Desktop\Le bureau du bureau\Ecole\Projets\projetC++\OpenGL_Init\main.cpp(285,25): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+  OpenGL_Init.vcxproj -> E:\Users\Eliott Clavier\Desktop\Le bureau du bureau\Ecole\Projets\projetC++\OpenGL_Init\x64\Debug\OpenGL_Init.exe
