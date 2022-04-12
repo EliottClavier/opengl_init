@@ -126,7 +126,7 @@ int main()
     {
         processInput(window);
 
-        // rendering commands here
+        // rendering commands 
 
         // gestion de la couleur du buffer
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -134,6 +134,12 @@ int main()
 
         // Utilisation du shader
         ourShader.use();
+
+        /*
+        // On set l'uniform xOffset à 0.5f dans le vertex shader
+        float offset = 1.5f;
+        ourShader.setFloat("xOffset", offset);
+        */
 
         // Utilisation du VAO courant
         glBindVertexArray(VAO);
