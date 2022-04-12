@@ -11,67 +11,6 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-// Source du shader de vertex par défaut en C (Shader de positionnement dans un Normalized Device Coordinates)
-// Shader qui communique la couleur entre eux avec vertexColor out et in
-/*
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"out vec4 vertexColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec4 vertexColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vertexColor;\n"
-"}\n\0";
-*/
-
-// Utilisateur uniform
-/*
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"out vec4 vertexColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"uniform vec4 ourColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = ourColor;\n"
-"}\n\0";
-*/
-
-// location 0 (3 premieres valeurs float pour un vertex) = position
-// location 1 (3 valeurs suivantes float pour un vertex) = couleur
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aColor;\n"
-"out vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"   ourColor = aColor;\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(ourColor, 1.0);\n"
-"}\n\0";
-
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow* window)
@@ -128,49 +67,6 @@ int main()
     glViewport(0, 0, 800, 600);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    // Intégration du shader de vertex pour OpenGL
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    // check for shader compile errors
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    // Intégration du shader de fragment (colorisation des pixels)
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    // Ajout des deux shaders au programme
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-
-    // Suppression des shaders (inclus dans le programme)
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
     // Création du vertex
     /*
     std::vector<Vertice> vertices{
@@ -180,67 +76,24 @@ int main()
     };
     */
 
-    /*
-    float vertices[] = {
-          0.0f,  -0.8f,  0.0f,
-          0.4f,   0.0f,  0.0f,
-          0.8f,  -0.8f,  0.0f,
-
-          0.0f,  -0.8f,  0.0f,
-         -0.4f,   0.0f,  0.0f,
-         -0.8f,  -0.8f,  0.0f,
-
-         -0.4f,   0.0f,  0.0f,
-          0.0f,   0.8f,  0.0f,
-          0.4f,   0.0f,  0.0f,
-    };
-    */
+    Shader ourShader("shader.vs", "shader.fs");
 
     float vertices[] = {
-          // Position           // Couleur
-          0.0f,  -0.8f,  0.0f,  1.0f, 0.0f, 0.0f,
-          0.4f,   0.0f,  0.0f,  0.0f, 1.0f, 0.0f,
-          0.8f,  -0.8f,  0.0f,  0.0f, 0.0f, 1.0f,
+        // Position           // Couleur
+        0.0f,  -0.8f,  0.0f,  1.0f, 0.0f, 0.0f,
+        0.4f,   0.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+        0.8f,  -0.8f,  0.0f,  0.0f, 0.0f, 1.0f,
 
-          0.0f,  -0.8f,  0.0f,  1.0f, 0.0f, 0.0f,
-         -0.4f,   0.0f,  0.0f,  0.0f, 1.0f, 0.0f,
-         -0.8f,  -0.8f,  0.0f,  0.0f, 0.0f, 1.0f,
+        0.0f,  -0.8f,  0.0f,  1.0f, 0.0f, 0.0f,
+       -0.4f,   0.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+       -0.8f,  -0.8f,  0.0f,  0.0f, 0.0f, 1.0f,
 
-         -0.4f,   0.0f,  0.0f,  1.0f, 0.0f, 0.0f,
-          0.0f,   0.8f,  0.0f,  0.0f, 1.0f, 0.0f,
-          0.4f,   0.0f,  0.0f,  0.0f, 0.0f, 1.0f,
+       -0.4f,   0.0f,  0.0f,  1.0f, 0.0f, 0.0f,
+        0.0f,   0.8f,  0.0f,  0.0f, 1.0f, 0.0f,
+        0.4f,   0.0f,  0.0f,  0.0f, 0.0f, 1.0f,
     };
 
-    int verticesNumber = { std::size(vertices)};
-
-
-    /*
-    float vertices[] = {
-     0.5f,  0.5f, 0.0f,  // top right
-     0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
-    };
-
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
-    };
-    */
-    
-    // Dessine seulement les lignes
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
-    // Dessine en remplissant (valeur par défaut)
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-    // Création de l'EBO qui permet de lier indices et vertices
-    /*
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    */
+    int verticesNumber = { std::size(vertices) };
 
 
     // Link Vertex au VBO qui va rendre les vertices avec le shader setup au dessus
@@ -278,29 +131,15 @@ int main()
         // gestion de la couleur du buffer
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        
-        // Utilisation du programme de shaders
-        glUseProgram(shaderProgram);
 
-        // Génération random d'une couleur en fonction du temps
-        float timeValue = glfwGetTime();
-        float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-        // On précise que cette couleur doit être appliqué à ourColor dans l'uniform du fragment shader
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        // Utilisateur de la couleur random dans les shaders
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        // Utilisation du shader
+        ourShader.use();
 
         // Utilisation du VAO courant
         glBindVertexArray(VAO);
 
         // Dessin du triangle
         glDrawArrays(GL_TRIANGLES, 0, verticesNumber);
-
-        // Dessin du rectangle
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-        //
 
         glfwSwapBuffers(window);
         glfwPollEvents();
